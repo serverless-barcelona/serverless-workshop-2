@@ -1,0 +1,15 @@
+service: yourname-yoursurname-serverless-workshop
+
+frameworkVersion: ">=1.2.0 <2.0.0"
+
+custom:
+  s3Bucket: ${self:service}
+
+provider:
+  name: aws
+  runtime: nodejs8.10
+  region: eu-west-1
+
+
+
+https://serverless.com/framework/docs/providers/aws/guide/serverless.yml/

@@ -1,0 +1,12 @@
+{
+  "name": "serverless-workshop-1",
+  "version": "0.0.0",
+  "scripts": {
+    "deploy-local" : "sls deploy -v --profile dev && node build-config-file-and-sync-s3.js",
+    "deploy" : "sls deploy -v && node build-config-file-and-sync-s3.js"
+  },
+  "private": true,
+  "dependencies": {
+    "aws-sdk": "2.553.0"
+  }
+}

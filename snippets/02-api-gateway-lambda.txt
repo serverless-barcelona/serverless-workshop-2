@@ -1,0 +1,10 @@
+functions:
+  api:
+    handler: handler.api
+    events:
+      - http:
+          path: openapi
+          method: post
+
+
+https://serverless.com/framework/docs/providers/aws/events/

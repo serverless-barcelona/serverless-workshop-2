@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width">
+
+        <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+
+        <link rel="stylesheet" href="css/font.css">
+        <link rel="stylesheet" href="css/normalize.css">
+        <link rel="stylesheet" href="css/index.css">
+        <link rel="stylesheet" href="css/message.css">
+        <link rel="stylesheet" href="css/custom.css">
+    </head>
+    <body>
+        <!--[if lt IE 7]>
+            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+        <![endif]-->
+
+        
+        <header>
+          <!--<img src="images/logo.png">-->
+        </header>
+
+
+        <section id="registerSection" class="form-wrap">
+            <h1>Register</h1>
+            <form id="registerForm">
+              <input type="email" id="emailInputRegister" placeholder="Email" required>
+              <input type="password" id="passwordInputRegister" placeholder="Password" pattern=".*" required>
+
+              <input id="register" type="submit" value="Register">
+            </form>
+        </section>
+
+        <section id="confirmSection" class="form-wrap">
+            <h1>Confirm</h1>
+            <form id="confirmForm">
+              <input type="email" id="code" placeholder="Confirmation Code" required>
+              <input id="confirm" type="submit" value="Confirm">
+            </form>
+        </section>
+
+        <section id="signinSection" class="form-wrap">
+            <h1>Sign In</h1>
+            <form id="signinForm">
+              <input type="email" id="emailInputSignin" placeholder="Email" required>
+              <input type="password" id="passwordInputSignin" placeholder="Password" pattern=".*" required>
+
+              <input id="signin" type="submit" value="Sign in">
+            </form>
+        </section>
+
+        <section id="apiSection" class="form-wrap">
+          <h2>Api calls buttons</h2>
+          <form id="apiForm">
+            <input id="openapi" type="submit" value="Call open api">
+            <input id="privateapi" type="submit" value="Call Authenticated Api">
+          </form>
+      </section>
+
+        <script src="js/vendor/jquery-3.1.0.js"></script>
+        <script src="js/eventemitter.js"></script>
+        <script src="js/vendor/bootstrap.min.js"></script>
+        <script src="js/vendor/aws-cognito-sdk.min.js"></script>
+        <script src="js/vendor/amazon-cognito-identity.min.js"></script>
+        <script src="js/config.js"></script>
+        <script src="js/cognito-handler.js"></script>
+        <script src="js/init.js"></script>
+    </body>
+</html>
+
+
+<!-- https://docs.aws.amazon.com/it_it/cognito/latest/developerguide/using-amazon-cognito-user-identity-pools-javascript-examples.html -->

@@ -1,0 +1,31 @@
+Resources:
+    CognitoUserPool:
+        Type: AWS::Cognito::UserPool
+        Properties:
+            UserPoolName: ${self:service}
+            AutoVerifiedAttributes:
+                - email
+            Policies:
+                PasswordPolicy:
+                    MinimumLength: 6
+                    RequireLowercase: False
+                    RequireNumbers: False
+                    RequireSymbols: False
+                    RequireUppercase: False
+    CognitoUserPoolClient:
+        Type: AWS::Cognito::UserPoolClient
+        Properties:
+            ClientName: ${self:service}
+            GenerateSecret: false
+            UserPoolId:
+                Ref: "CognitoUserPool"
+    CognitoAuthorizer:
+        Type: AWS::ApiGateway::Authorizer
+        Properties:
+            Name: CognitoAuthorizer
+            RestApiId:
+                Ref: ApiGatewayRestApi
+            Type: COGNITO_USER_POOLS
+            ProviderARNs:
+                - Fn::GetAtt: [CognitoUserPool, Arn]
+            IdentitySource: method.request.header.Authorization

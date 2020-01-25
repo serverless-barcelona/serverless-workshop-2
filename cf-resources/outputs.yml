@@ -1,0 +1,16 @@
+Outputs:
+  CognitoUserPoolId:
+    Description: "Cognito User Pool ID"
+    Value:
+      Ref: "CognitoUserPool"
+  CognitoUserPoolClientId:
+    Description: "Cognito User Pool Client ID"
+    Value:
+      Ref: "CognitoUserPoolClient"
+  WebsiteBucket:
+    Description: "Bucket where to store"
+    Value:
+      Ref: "WebAppS3Bucket"
+  WebsiteURL:
+    Value: !GetAtt [WebAppS3Bucket, WebsiteURL]
+    Description: URL for website hosted on S3

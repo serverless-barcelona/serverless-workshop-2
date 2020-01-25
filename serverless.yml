@@ -1,0 +1,36 @@
+service: serverless-barcelona-workshop-2
+
+frameworkVersion: ">=1.2.0 <2.0.0"
+
+custom:
+  s3Bucket: ${self:service}
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  region: eu-west-1
+
+functions:
+  api:
+    handler: handler.api
+    events:
+      - http:
+          path: openapi
+          method: post
+          cors: true
+  protectedApi:
+    handler: handler.api
+    events:
+      - http:
+          path: api
+          method: post
+          cors: true
+          authorizer:
+            type: COGNITO_USER_POOLS
+            authorizerId:
+              Ref: CognitoAuthorizer
+resources:
+  - ${file(./cf-resources/cognito.yml)}
+  - ${file(./cf-resources/website-bucket.yml)}
+  - ${file(./cf-resources/outputs.yml)}
+

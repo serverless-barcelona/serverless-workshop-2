@@ -1,0 +1,10 @@
+image: dottorsaimon/nodeawscli:1.1
+
+pipelines:
+  default:
+    - step:
+        script: # Modify the commands below to build your repository.
+          #- npm install serverless -g
+          - npm run deploy
+
+# https://confluence.atlassian.com/bitbucket/configure-bitbucket-pipelines-yml-792298910.html
