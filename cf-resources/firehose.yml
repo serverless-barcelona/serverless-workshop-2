@@ -1,0 +1,59 @@
+Resources:
+  StreamBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: ${self:custom.streamBucket}
+      AccessControl: Private
+  FirehoseRole:
+    Type: "AWS::IAM::Role"
+    Properties:
+      RoleName: ${self:service}-firehose-role
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: "Allow"
+            Principal:
+              Service:
+                - firehose.amazonaws.com
+                - s3.amazonaws.com
+            Action:
+              - "sts:AssumeRole"
+      Policies:
+        - PolicyName: ${self:service}-firehose-policy
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: "Allow"
+                Action:
+                  - "firehose:*"
+                Resource: "*"
+              - Effect: "Allow"
+                Action:
+                  - "s3:AbortMultipartUpload"
+                  - "s3:GetBucketLocation"
+                  - "s3:GetObject"
+                  - "s3:ListBucket"
+                  - "s3:ListBucketMultipartUploads"
+                  - "s3:PutObject"
+                Resource:
+                  - arn:aws:s3:::${self:custom.streamBucket}
+                  - arn:aws:s3:::${self:custom.streamBucket}/*
+  FirehoseStream:
+    Type: "AWS::KinesisFirehose::DeliveryStream"
+    DependsOn:
+      - FirehoseRole
+      - StreamBucket
+    Properties:
+      DeliveryStreamName: serverless-workshop
+      S3DestinationConfiguration:
+        BufferingHints:
+          IntervalInSeconds: 120
+          SizeInMBs: 64
+        BucketARN: arn:aws:s3:::${self:custom.streamBucket}
+        CompressionFormat: GZIP
+        Prefix: workshop/year=!{timestamp:yyyy}/month=!{timestamp:MM}/day=!{timestamp:dd}/hour=!{timestamp:HH}/
+        ErrorOutputPrefix: workshop-errors/!{firehose:error-output-type}/year=!{timestamp:yyyy}/month=!{timestamp:MM}/day=!{timestamp:dd}/hour=!{timestamp:HH}/
+        RoleARN:
+          Fn::GetAtt:
+            - FirehoseRole
+            - Arn
