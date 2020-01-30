@@ -4,45 +4,53 @@ Resources:
     Properties:
       BucketName: ${self:custom.streamBucket}
       AccessControl: Private
+  
   FirehoseRole:
-    Type: "AWS::IAM::Role"
+    Type: AWS::IAM::Role
     Properties:
       RoleName: ${self:service}-firehose-role
       AssumeRolePolicyDocument:
-        Version: "2012-10-17"
+        Version: '2012-10-17'
         Statement:
-          - Effect: "Allow"
+          - Effect: Allow
             Principal:
               Service:
                 - firehose.amazonaws.com
                 - s3.amazonaws.com
             Action:
-              - "sts:AssumeRole"
-      Policies:
-        - PolicyName: ${self:service}-firehose-policy
-          PolicyDocument:
-            Version: "2012-10-17"
-            Statement:
-              - Effect: "Allow"
-                Action:
-                  - "firehose:*"
-                Resource: "*"
-              - Effect: "Allow"
-                Action:
-                  - "s3:AbortMultipartUpload"
-                  - "s3:GetBucketLocation"
-                  - "s3:GetObject"
-                  - "s3:ListBucket"
-                  - "s3:ListBucketMultipartUploads"
-                  - "s3:PutObject"
-                Resource:
-                  - arn:aws:s3:::${self:custom.streamBucket}
-                  - arn:aws:s3:::${self:custom.streamBucket}/*
+              - 'sts:AssumeRole'
+      ManagedPolicyArns:
+        - !Ref FirehosePolicy
+
+  FirehosePolicy:
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: 'Allow'
+            Action:
+              - 'firehose:*'
+            Resource: '*'
+          - Effect: 'Allow'
+            Action:
+              - 's3:AbortMultipartUpload'
+              - 's3:GetBucketLocation'
+              - 's3:GetObject'
+              - 's3:ListBucket'
+              - 's3:ListBucketMultipartUploads'
+              - 's3:PutObject'
+            Resource:
+              - arn:aws:s3:::${self:custom.streamBucket}
+              - arn:aws:s3:::${self:custom.streamBucket}/*
+
   FirehoseStream:
-    Type: "AWS::KinesisFirehose::DeliveryStream"
+    Type: 'AWS::KinesisFirehose::DeliveryStream'
     DependsOn:
       - FirehoseRole
       - StreamBucket
+      # - AthenaDatabase
+      # - AthenaTable
     Properties:
       DeliveryStreamName: serverless-workshop
       S3DestinationConfiguration:
@@ -50,6 +58,7 @@ Resources:
           IntervalInSeconds: 120
           SizeInMBs: 64
         BucketARN: arn:aws:s3:::${self:custom.streamBucket}
+        # CompressionFormat: Snappy
         CompressionFormat: GZIP
         Prefix: workshop/year=!{timestamp:yyyy}/month=!{timestamp:MM}/day=!{timestamp:dd}/hour=!{timestamp:HH}/
         ErrorOutputPrefix: workshop-errors/!{firehose:error-output-type}/year=!{timestamp:yyyy}/month=!{timestamp:MM}/day=!{timestamp:dd}/hour=!{timestamp:HH}/
@@ -57,3 +66,18 @@ Resources:
           Fn::GetAtt:
             - FirehoseRole
             - Arn
+        # DataFormatConversionConfiguration:
+        #   SchemaConfiguration:
+        #     CatalogId: !Ref AWS::AccountId
+        #     RoleARN: !GetAtt FirehoseRole.Arn
+        #     DatabaseName: !Ref AthenaDatabase
+        #     TableName: !Ref AthenaTable
+        #     Region: !Ref AWS::Region
+        #     VersionId: LATEST
+        #   InputFormatConfiguration:
+        #     Deserializer:
+        #       OpenXJsonSerDe: {}
+        #   OutputFormatConfiguration:
+        #     Serializer:
+        #       ParquetSerDe: {}
+        #   Enabled: True

@@ -1,0 +1,42 @@
+# Resources:
+#   AthenaDatabase:
+#     Type: AWS::Glue::Database
+#     Properties: 
+#       CatalogId: !Ref AWS::AccountId
+#       DatabaseInput: 
+#         Name: !Ref website_db	
+#         Description: Database to hold tables for flights data
+#         LocationUri: s3://${self:custom.streamBucket}/workshop
+
+#   AthenaTable:
+#     Type: AWS::Glue::Table
+#     Properties: 
+#       CatalogId: !Ref AWS:AccountId
+#       DatabaseName: !Ref AthenaDatabase
+#       TableInput: 
+#         Name: website_clicks_tb
+#         Description: Table to hold clicks from users
+#         TableType: EXTERNAL_TABLE
+#         Parameters:
+#           classification: csv
+#         PartitionKeys: 
+#           - Name: year
+#             Type: bigint
+#           - Name: month
+#             Type: bigint
+#           - Name: day
+#             Type: bigint
+#           - Name: hour
+#             Type: bigint
+#         # Retention: Integer
+#         StorageDescriptor: 
+#           InputFormat: org.apache.hadoop.mapred.TextInputFormat
+#           OutputFormat: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+#           Location: s3://${self:custom.streamBucket}/workshop
+#           SerdeInfo:
+#             Parameters:
+#               field.delim: ","
+#             SerializationLibrary: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
+
+#         # ViewExpandedText: String
+#         # ViewOriginalText: String

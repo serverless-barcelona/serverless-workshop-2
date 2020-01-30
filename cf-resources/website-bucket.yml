@@ -3,17 +3,17 @@ Resources:
     Type: AWS::S3::Bucket
     Properties:
       BucketName: !Join
-      - "-"
+      - '-'
       - - ${self:custom.s3Bucket}
         - !Select
           - 0
           - !Split
-            - "-"
+            - '-'
             - !Select
               - 2
               - !Split
-                - "/"
-                - !Ref "AWS::StackId"
+                - '/'
+                - !Ref 'AWS::StackId'
       AccessControl: PublicRead
       WebsiteConfiguration:
         IndexDocument: index.html
@@ -28,10 +28,10 @@ Resources:
         Statement:
           - Sid: PublicReadGetObject
             Effect: Allow
-            Principal: "*"
+            Principal: '*'
             Action:
             - s3:GetObject
             Resource: !Join
-              - ""
+              - ''
               - - !GetAtt WebAppS3Bucket.Arn
                 - /*

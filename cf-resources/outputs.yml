@@ -1,16 +1,29 @@
 Outputs:
   CognitoUserPoolId:
-    Description: "Cognito User Pool ID"
+    Description: Cognito User Pool ID
     Value:
-      Ref: "CognitoUserPool"
+      Ref: CognitoUserPool
+
   CognitoUserPoolClientId:
-    Description: "Cognito User Pool Client ID"
+    Description: Cognito User Pool Client ID
     Value:
-      Ref: "CognitoUserPoolClient"
+      Ref: 'CognitoUserPoolClient'
+
   WebsiteBucket:
-    Description: "Bucket where to store"
+    Description: 'Bucket where to store'
     Value:
-      Ref: "WebAppS3Bucket"
+      Ref: 'WebAppS3Bucket'
+
   WebsiteURL:
     Value: !GetAtt [WebAppS3Bucket, WebsiteURL]
     Description: URL for website hosted on S3
+
+  CognitoIdentityPoolId:
+    Value:
+      Ref: CognitoIdentityPool
+    Description: Cognito User Identity Pool ID
+
+  DeliveryStreamName:
+    Value:
+      Ref: FirehoseStream
+    Description: Firehose delivery Stream Name

@@ -50,3 +50,5 @@ Thumbs.db
 .serverless/*
 
 .venv
+
+website/js/config.js

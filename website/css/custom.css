@@ -1,4 +1,4 @@
-#confirmSection, #signinSection {
+#confirmSection, #signinSection, #loggedInSection {
     display: none;
 }
 
