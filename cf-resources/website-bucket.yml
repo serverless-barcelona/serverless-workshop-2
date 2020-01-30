@@ -2,11 +2,23 @@ Resources:
   WebAppS3Bucket:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: ${self:custom.s3Bucket}
+      BucketName: !Join
+      - "-"
+      - - ${self:custom.s3Bucket}
+        - !Select
+          - 0
+          - !Split
+            - "-"
+            - !Select
+              - 2
+              - !Split
+                - "/"
+                - !Ref "AWS::StackId"
       AccessControl: PublicRead
       WebsiteConfiguration:
         IndexDocument: index.html
         ErrorDocument: index.html
+
   WebAppS3BucketPolicy:
     Type: AWS::S3::BucketPolicy
     Properties:
@@ -19,4 +31,7 @@ Resources:
             Principal: "*"
             Action:
             - s3:GetObject
-            Resource: arn:aws:s3:::${self:custom.s3Bucket}/*
+            Resource: !Join
+              - ""
+              - - !GetAtt WebAppS3Bucket.Arn
+                - /*

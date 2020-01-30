@@ -6,7 +6,6 @@ custom:
   s3Bucket: ${self:service}
   accountId: ${file(./accountHelper.js):getAccountId}
   streamBucket: ${self:service}-${self:custom.accountId}
-  
 
 provider:
   name: aws
@@ -31,6 +30,7 @@ functions:
           path: openapi
           method: post
           cors: true
+          
   pushApi:
     handler: firehoseHandler.push
     environment:
