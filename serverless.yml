@@ -12,6 +12,16 @@ provider:
   name: aws
   runtime: nodejs12.x
   region: eu-west-1
+  memorySize: 128
+  timeout: 10
+  iamRoleStatements: # IAM role statements so that services can be accessed in the AWS account
+  - Effect: 'Allow'
+    Action:
+      - 'firehose:PutRecord'
+    Resource:
+      Fn::GetAtt: 
+            - FirehoseStream
+            - Arn
 
 functions:
   api:
@@ -21,8 +31,12 @@ functions:
           path: openapi
           method: post
           cors: true
-  protectedApi:
-    handler: handler.api
+  pushApi:
+    handler: firehoseHandler.push
+    environment:
+      DELIVERY_STREAM: 
+        Ref: FirehoseStream
+ 
     events:
       - http:
           path: api
