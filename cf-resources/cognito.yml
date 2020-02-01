@@ -12,13 +12,15 @@ Resources:
                     RequireNumbers: False
                     RequireSymbols: False
                     RequireUppercase: False
+
     CognitoUserPoolClient:
         Type: AWS::Cognito::UserPoolClient
         Properties:
             ClientName: ${self:service}
             GenerateSecret: false
             UserPoolId:
-                Ref: "CognitoUserPool"
+                Ref: 'CognitoUserPool'
+
     CognitoAuthorizer:
         Type: AWS::ApiGateway::Authorizer
         Properties:
@@ -29,3 +31,42 @@ Resources:
             ProviderARNs:
                 - Fn::GetAtt: [CognitoUserPool, Arn]
             IdentitySource: method.request.header.Authorization
+
+    # Creates a federeated Identity pool
+    CognitoIdentityPool:
+        Type: AWS::Cognito::IdentityPool
+        Properties:
+            IdentityPoolName: cognito_user_identity_pool
+            AllowUnauthenticatedIdentities: false
+            CognitoIdentityProviders: 
+            - ClientId: !Ref CognitoUserPoolClient
+              ProviderName: !GetAtt CognitoUserPool.ProviderName
+
+    FireHosePolicyAttachment:
+        Type: AWS::Cognito::IdentityPoolRoleAttachment
+        Properties:
+            IdentityPoolId: !Ref CognitoIdentityPool
+            Roles:
+                'authenticated': !GetAtt CognitoAuthRole.Arn
+
+    CognitoAuthRole:
+        Type: AWS::IAM::Role
+        Properties:
+            Path: /
+            RoleName: cognito_role_firehose
+            AssumeRolePolicyDocument:
+                Version: '2012-10-17'
+                Statement:
+                    - Effect: Allow
+                      Principal:
+                        Federated: 'cognito-identity.amazonaws.com'
+                      Action:
+                        - 'sts:AssumeRoleWithWebIdentity'
+                      Condition:
+                        StringEquals:
+                          'cognito-identity.amazonaws.com:aud':
+                            Ref: CognitoIdentityPool
+                        'ForAnyValue:StringLike':
+                            'cognito-identity.amazonaws.com:amr': authenticated
+            ManagedPolicyArns:
+                - !Ref FirehosePolicy
