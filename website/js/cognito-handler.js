@@ -36,37 +36,6 @@ function req(path) {
 
 }
 
-function initializeSdk(result) {
-    // https://docs.aws.amazon.com/cognito/latest/developerguide/amazon-cognito-integrating-user-pools-with-identity-pools.html
-    var { region, userPoolClientId, userIdentityPoolId, userPoolId } = window._config.cognito;
-
-    // Config region
-    AWS.config.region = window._config.cognito.region;
-
-    // Add the User's Id Token to the Cognito credentials login map.
-    AWS.config.credentials = new AWS.CognitoIdentityCredentials({
-        IdentityPoolId: userIdentityPoolId,
-        Logins: {
-            [`cognito-idp.${region}.amazonaws.com/${userPoolId}`]: result.getIdToken().getJwtToken(),
-        },
-    });
-
-    console.log('SDK Initialized');
-}
-
-function sendToFirehose(data) {
-    var firehose = new AWS.Firehose();
-
-    firehose.putRecord({
-        DeliveryStreamName: _config.cognito.deliveryStreamName,
-        Record: {
-            Data: JSON.stringify(data),
-        }
-    }, (err, data) => {
-        console.log(err, data);
-    });
-}
-
 customEvents.on('init_ready', () => {
     var cognitoUser = userPool.getCurrentUser();
     var isUserRegistered = localStorage.getItem('registered');

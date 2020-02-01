@@ -18,9 +18,9 @@ provider:
     Action:
       - 'firehose:PutRecord'
     Resource:
-      Fn::GetAtt: 
-            - FirehoseStream
-            - Arn
+      Fn::GetAtt:
+        - FirehoseStream
+        - Arn
 
 functions:
   api:
