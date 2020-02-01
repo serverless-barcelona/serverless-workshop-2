@@ -51,4 +51,5 @@ resources:
   - ${file(./cf-resources/website-bucket.yml)}
   - ${file(./cf-resources/firehose.yml)}
   - ${file(./cf-resources/outputs.yml)}
+  - ${file(./cf-resources/kinesis-analytics.yml)}
 
