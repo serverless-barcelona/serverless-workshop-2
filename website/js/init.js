@@ -74,6 +74,10 @@ $(document).ready(() => {
         x: click.x,
         y: click.y,
         toElement: click.srcElement.localName,
+        year: new Date().getFullYear(),
+        month: `${new Date().getMonth() + 1}`.padStart(2, '0'),
+        day: `${new Date().getDate()}`.padStart(2, '0'),
+        hour: `${new Date().getHours()}`.padStart(2, '0'),
       })
     ));
   }, 3000);

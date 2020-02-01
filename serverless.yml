@@ -52,4 +52,5 @@ resources:
   - ${file(./cf-resources/firehose.yml)}
   - ${file(./cf-resources/outputs.yml)}
   - ${file(./cf-resources/kinesis-analytics.yml)}
+  - ${file(./cf-resources/glue.yml)}
 
