@@ -60,8 +60,8 @@ Resources:
       DeliveryStreamName: serverless-workshop
       ExtendedS3DestinationConfiguration:
         BufferingHints:
-          IntervalInSeconds: 120
-          SizeInMBs: 64
+          IntervalInSeconds: 60
+          SizeInMBs: 1
         BucketARN: arn:aws:s3:::${self:custom.streamBucket}
         CompressionFormat: UNCOMPRESSED
         # CompressionFormat: Snappy
