@@ -10,6 +10,8 @@ Resources:
 
   AthenaTable:
     Type: AWS::Glue::Table
+    DependsOn:
+      - AthenaDatabase
     Properties: 
       CatalogId: !Ref AWS::AccountId
       DatabaseName: !Ref AthenaDatabase

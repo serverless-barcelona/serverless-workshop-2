@@ -1,6 +1,9 @@
 Resources:
   KinesisAnalyticsApplication:
     Type: AWS::KinesisAnalytics::Application
+    DependsOn:
+      - FirehoseStream
+      - KinesisAnalyticsServiceExecutionRole
     # Type: AWS::KinesisAnalyticsV2::Application
     Properties:
       ApplicationName: ${self:service}-app

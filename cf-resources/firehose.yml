@@ -54,8 +54,7 @@ Resources:
     DependsOn:
       - FirehoseRole
       - StreamBucket
-      # - AthenaDatabase
-      # - AthenaTable
+      - AthenaTable
     Properties:
       DeliveryStreamName: serverless-workshop
       ExtendedS3DestinationConfiguration:
