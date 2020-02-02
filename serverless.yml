@@ -18,9 +18,9 @@ provider:
     Action:
       - 'firehose:PutRecord'
     Resource:
-      Fn::GetAtt: 
-            - FirehoseStream
-            - Arn
+      Fn::GetAtt:
+        - FirehoseStream
+        - Arn
 
 functions:
   api:
@@ -51,4 +51,6 @@ resources:
   - ${file(./cf-resources/website-bucket.yml)}
   - ${file(./cf-resources/firehose.yml)}
   - ${file(./cf-resources/outputs.yml)}
+  - ${file(./cf-resources/kinesis-analytics.yml)}
+  - ${file(./cf-resources/glue.yml)}
 

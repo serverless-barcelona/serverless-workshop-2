@@ -1,49 +1,96 @@
-# Resources:
-#   KinesisAnalyticsApplication:
-#     Type: AWS::KinesisAnalyticsV2::Application
-#     Properties:
-#       ApplicationName: ${self:service}-app
-#       ApplicationDescription: Kinesis Analytics Application Test
-#       RuntimeEnvironment: SQL-1_0
-#       ServiceExecutionRole:
-#         !GetAtt  KinesisAnalyticsServiceExecutionRole.Arn
-#       ApplicationConfiguration:
-#         SqlApplicationConfiguration:
-#           ApplicationCodeConfiguration:
-#             CodeContent:
-#               TextContent: Example Application Code
-#             CodeContentType: PLAINTEXT
-#           Inputs:
-#             NamePrefix: FIREHOSE_STREAM
-#             KinesisFirehoseInput:
-#               ResourceARN: !Ref FirehoseStream
-#             InputSchema:
-#               RecordColumn:
-#                 - Name: example
-#                   SqlType: VARCHAR(16)
-#                   Mapping: $.example
-#               RecordFormat:
-#                 RecordFormatType: JSON
-#                 MappingParameters:
-#                   JSONMappingParameters:
-#                     RecordRowPath: $
+Resources:
+  KinesisAnalyticsApplication:
+    Type: AWS::KinesisAnalytics::Application
+    # Type: AWS::KinesisAnalyticsV2::Application
+    Properties:
+      ApplicationName: ${self:service}-app
+      ApplicationDescription: Kinesis Analytics Application Test
+      ApplicationCode: "SELECT * FROM FIREHOSE_STREAM_001"
+      Inputs:
+        - NamePrefix: FIREHOSE_STREAM
+          KinesisFirehoseInput:
+            ResourceARN: !GetAtt FirehoseStream.Arn
+            RoleARN: !GetAtt KinesisAnalyticsServiceExecutionRole.Arn
+          InputSchema:
+            RecordColumns:
+              - Name: event_user
+                SqlType: VARCHAR(128)
+                Mapping: $.user
+              - Name: event_timestamp
+                SqlType: VARCHAR(128)
+                Mapping: $.timestamp
+              - Name: event_type
+                SqlType: VARCHAR(128)
+                Mapping: $.type
+              - Name: event_screenx
+                SqlType: VARCHAR(128)
+                Mapping: $.x
+              - Name: event_screeny
+                SqlType: VARCHAR(128)
+                Mapping: $.y
+              - Name: event_toElement
+                SqlType: VARCHAR(128)
+                Mapping: $.toElement
+            RecordFormat:
+              RecordFormatType: JSON
+              MappingParameters:
+                JSONMappingParameters:
+                  RecordRowPath: $
+  #     RuntimeEnvironment: SQL-1_0
+  #     ServiceExecutionRole:
+  #       !GetAtt  KinesisAnalyticsServiceExecutionRole.Arn
+  #     ApplicationConfiguration:
+  #       ApplicationCodeConfiguration:
+  #         CodeContent:
+  #           TextContent: Example Application Code
+  #         CodeContentType: PLAINTEXT
+  #       SqlApplicationConfiguration:
+  #         Inputs:
+  #         - NamePrefix: FIREHOSE_STREAM
+  #           KinesisFirehoseInput:
+  #             ResourceARN: !GetAtt FirehoseStream.Arn
+  #           InputSchema:
+  #             RecordColumns:
+  #               - Name: event_user
+  #                 SqlType: VARCHAR(128)
+  #                 Mapping: $.user
+  #               - Name: event_timestamp
+  #                 SqlType: VARCHAR(128)
+  #                 Mapping: $.timestamp
+  #               - Name: event_type
+  #                 SqlType: VARCHAR(128)
+  #                 Mapping: $.type
+  #               - Name: event_screenx
+  #                 SqlType: VARCHAR(128)
+  #                 Mapping: $.x
+  #               - Name: event_screeny
+  #                 SqlType: VARCHAR(128)
+  #                 Mapping: $.y
+  #               - Name: event_toElement
+  #                 SqlType: VARCHAR(128)
+  #                 Mapping: $.toElement
+  #             RecordFormat:
+  #               RecordFormatType: JSON
+  #               MappingParameters:
+  #                 JSONMappingParameters:
+  #                   RecordRowPath: $
 
-#   KinesisAnalyticsServiceExecutionRole:
-#     Type: 'AWS::IAM::Role'
-#     Properties:
-#       AssumeRolePolicyDocument:
-#         Version: 2012-10-17
-#         Statement:
-#           - Effect: Allow
-#             Principal:
-#               Service: kinesisanalytics.amazonaws.com
-#             Action: 'sts:AssumeRole'
-#       Path: /
-#       Policies:
-#         - PolicyName: Open
-#           PolicyDocument:
-#             Version: 2012-10-17
-#             Statement:
-#               - Effect: Allow
-#                 Action: '*'
-#                 Resource: '*'
+  KinesisAnalyticsServiceExecutionRole:
+    Type: 'AWS::IAM::Role'
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: kinesisanalytics.amazonaws.com
+            Action: 'sts:AssumeRole'
+      Path: /
+      Policies:
+        - PolicyName: Open
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action: '*'
+                Resource: '*'

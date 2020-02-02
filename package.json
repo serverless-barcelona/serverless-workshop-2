@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "scripts": {
     "deploy-local": "npm install && sls deploy -v --profile dev && node build-config-file-and-sync-s3.js",
-    "deploy": "npm install && sls deploy -v && node build-config-file-and-sync-s3.js"
+    "deploy": "npm install && sls deploy -v && node build-config-file-and-sync-s3.js",
+    "remove": "sls remove"
   },
   "private": true,
   "dependencies": {
