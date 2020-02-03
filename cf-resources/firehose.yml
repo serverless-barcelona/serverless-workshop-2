@@ -60,7 +60,7 @@ Resources:
       ExtendedS3DestinationConfiguration:
         BufferingHints:
           IntervalInSeconds: 60
-          SizeInMBs: 1
+          SizeInMBs: 64
         BucketARN: arn:aws:s3:::${self:custom.streamBucket}
         CompressionFormat: UNCOMPRESSED
         # CompressionFormat: Snappy
