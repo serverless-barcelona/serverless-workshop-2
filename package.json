@@ -2,8 +2,8 @@
   "name": "serverless-workshop-1",
   "version": "0.0.0",
   "scripts": {
-    "deploy-local": "npm install && sls deploy -v --profile dev && node build-config-file-and-sync-s3.js",
-    "deploy": "npm install && sls deploy -v && node build-config-file-and-sync-s3.js",
+    "deploy-local": "npm install && sls deploy -v --webhook YOUR_WEBHOOK --profile dev && node build-config-file-and-sync-s3.js",
+    "deploy": "npm install && sls deploy -v --webhook $WEBHOOK && node build-config-file-and-sync-s3.js",
     "remove": "sls remove"
   },
   "private": true,

@@ -47,6 +47,8 @@ functions:
 
   analyticsConsumer:
     handler: analytics.consume
+    environment:
+      WEBHOOK: ${opt:webhook}
  
 resources:
   - ${file(./cf-resources/cognito.yml)}
