@@ -1,14 +1,32 @@
 'use strict';
+const axios = require('axios');
+
+const send = async (data) => {
+    const response = await axios({
+        method : 'post',
+        url: process.env.WEBHOOK,
+        data: data,
+        headers: {
+            'Content-Type': 'application/json'
+        }
+      });
+    return {
+        status: response.status,
+        data: response.data
+    }
+}
 
 module.exports.consume = async event => {
     let success = 0;
     let failure = 0;
-    const output = event.records.map((record) => {
+    const output = event.records.map(async (record) => {
         /* Data is base64 encoded, so decode here */
-        const recordData = Buffer.from(record.data, 'base64');
-        console.log(recordData);
+        const str = Buffer.from(record.data, 'base64').toString();
+        console.log(str);
+        await send(str);
         try {
             /*
+
              * Note: Write logic here to deliver the record data to the
              * destination of your choice
              */
