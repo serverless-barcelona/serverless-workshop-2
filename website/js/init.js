@@ -63,22 +63,24 @@ $(document).ready(() => {
   customEvents.emit('init_ready');
 
   setIntervalAsync(async () => {
-    const currentClicks = clickStream;
-    clickStream = [];
+    if (userPool.getCurrentUser() != null) {
+      const currentClicks = clickStream;
+      clickStream = [];
 
-    await sendToFirehose(currentClicks.map(
-      (click) => ({
-        user: userPool.getCurrentUser().username,
-        timestamp: Date.now(),
-        type: click.type,
-        x: click.x,
-        y: click.y,
-        toElement: click.srcElement.localName,
-        year: new Date().getFullYear(),
-        month: `${new Date().getMonth() + 1}`.padStart(2, '0'),
-        day: `${new Date().getDate()}`.padStart(2, '0'),
-        hour: `${new Date().getHours()}`.padStart(2, '0'),
-      })
-    ));
+      await sendToFirehose(currentClicks.map(
+        (click) => ({
+          user: userPool.getCurrentUser().username,
+          timestamp: Date.now(),
+          type: click.type,
+          x: click.x,
+          y: click.y,
+          toElement: click.srcElement.localName,
+          year: new Date().getFullYear(),
+          month: `${new Date().getMonth() + 1}`.padStart(2, '0'),
+          day: `${new Date().getDate()}`.padStart(2, '0'),
+          hour: `${new Date().getHours()}`.padStart(2, '0'),
+        })
+      ));
+    }
   }, 3000);
 });
