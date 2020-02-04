@@ -54,36 +54,14 @@ Resources:
     DependsOn:
       - FirehoseRole
       - StreamBucket
-      - AthenaTable
     Properties:
       DeliveryStreamName: serverless-workshop
-      ExtendedS3DestinationConfiguration:
+      S3DestinationConfiguration:
         BufferingHints:
           IntervalInSeconds: 60
           SizeInMBs: 64
         BucketARN: arn:aws:s3:::${self:custom.streamBucket}
-        CompressionFormat: UNCOMPRESSED
-        # CompressionFormat: Snappy
-        # CompressionFormat: GZIP
+        CompressionFormat: GZIP
         Prefix: workshop/year=!{timestamp:yyyy}/month=!{timestamp:MM}/day=!{timestamp:dd}/hour=!{timestamp:HH}/
         ErrorOutputPrefix: workshop-errors/!{firehose:error-output-type}/year=!{timestamp:yyyy}/month=!{timestamp:MM}/day=!{timestamp:dd}/hour=!{timestamp:HH}/
         RoleARN: !GetAtt FirehoseRole.Arn
-        DataFormatConversionConfiguration:
-          SchemaConfiguration:
-            CatalogId: !Ref AWS::AccountId
-            RoleARN: !GetAtt FirehoseRole.Arn
-            DatabaseName: !Ref AthenaDatabase
-            TableName: !Ref AthenaTable
-            Region: !Ref AWS::Region
-            VersionId: LATEST
-          InputFormatConfiguration:
-            Deserializer:
-              OpenXJsonSerDe:
-                ColumnToJsonKeyMappings:
-                  ts: timestamp
-                  usr: user
-          OutputFormatConfiguration:
-            Serializer:
-              ParquetSerDe:
-                Compression: SNAPPY
-          Enabled: True

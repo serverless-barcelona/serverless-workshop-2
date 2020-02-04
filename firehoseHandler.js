@@ -3,15 +3,15 @@ const AWS = require('aws-sdk');
 var firehose = new AWS.Firehose();
 
 module.exports.push = async event => {
-    try {
+    try{
         event.body = JSON.parse(event.body);
-    } catch (e) { }
+    } catch(e){}
     var params = {
         DeliveryStreamName: process.env.DELIVERY_STREAM, /* required */
         Record: { /* required */
-            Data: JSON.stringify(event)
+          Data: JSON.stringify(event)
         }
-    };
+      };
     var result = await firehose.putRecord(params).promise();
     return {
         statusCode: 200,
@@ -27,4 +27,5 @@ module.exports.push = async event => {
             2
         ),
     };
+
 };

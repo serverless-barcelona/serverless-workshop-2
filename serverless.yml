@@ -18,9 +18,9 @@ provider:
     Action:
       - 'firehose:PutRecord'
     Resource:
-      Fn::GetAtt:
-        - FirehoseStream
-        - Arn
+      Fn::GetAtt: 
+            - FirehoseStream
+            - Arn
 
 functions:
   api:
@@ -30,7 +30,6 @@ functions:
           path: openapi
           method: post
           cors: true
-          
   pushApi:
     handler: firehoseHandler.push
     environment:
