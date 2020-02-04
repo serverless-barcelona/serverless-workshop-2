@@ -30,14 +30,12 @@ functions:
           path: openapi
           method: post
           cors: true
+
   pushApi:
     handler: firehoseHandler.push
     environment:
       DELIVERY_STREAM: 
         Ref: FirehoseStream
-  analyticsConsumer:
-    handler: analytics.consume
- 
     events:
       - http:
           path: api
@@ -47,6 +45,10 @@ functions:
             type: COGNITO_USER_POOLS
             authorizerId:
               Ref: CognitoAuthorizer
+
+  analyticsConsumer:
+    handler: analytics.consume
+ 
 resources:
   - ${file(./cf-resources/cognito.yml)}
   - ${file(./cf-resources/website-bucket.yml)}
