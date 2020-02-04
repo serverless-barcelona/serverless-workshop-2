@@ -30,7 +30,6 @@ functions:
           path: openapi
           method: post
           cors: true
-
   pushApi:
     handler: firehoseHandler.push
     environment:
