@@ -7,7 +7,20 @@ Resources:
     Properties:
       ApplicationName: ${self:service}-app
       ApplicationDescription: Kinesis Analytics Application Test
-      ApplicationCode: "SELECT * FROM FIREHOSE_STREAM_001"
+      ApplicationCode: >
+        CREATE OR REPLACE STREAM "FIREHOSE_STREAM_OUT" (
+          event_user VARCHAR(128),
+          event_timestamp VARCHAR(128),
+          event_type VARCHAR(128),
+          event_screenx VARCHAR(128),
+          event_screeny VARCHAR(128),
+          event_toElement VARCHAR(128)
+        );
+
+        CREATE OR REPLACE PUMP "STREAM_PUMP" AS
+            INSERT INTO "FIREHOSE_STREAM_OUT"
+                SELECT STREAM "event_user", "event_timestamp", "event_type", "event_screenx", "event_screeny", "event_toElement"
+                FROM FIREHOSE_STREAM_001
       Inputs:
         - NamePrefix: FIREHOSE_STREAM
           KinesisFirehoseInput:
@@ -46,7 +59,7 @@ Resources:
     Properties:
       ApplicationName: !Ref KinesisAnalyticsApplication
       Output:
-        Name: "exampleOutput"
+        Name: FIREHOSE_STREAM_OUT
         DestinationSchema:
           RecordFormatType: "JSON"
         LambdaOutput:
