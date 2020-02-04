@@ -1,4 +1,4 @@
-service: serverless-barcelona-workshop-2
+service: serverless-barcelona-workshop-2a
 
 frameworkVersion: ">=1.2.0 <2.0.0"
 
@@ -35,6 +35,8 @@ functions:
     environment:
       DELIVERY_STREAM: 
         Ref: FirehoseStream
+  analyticsConsumer:
+    handler: analytics.consume
  
     events:
       - http:

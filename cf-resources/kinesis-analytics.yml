@@ -4,7 +4,6 @@ Resources:
     DependsOn:
       - FirehoseStream
       - KinesisAnalyticsServiceExecutionRole
-    # Type: AWS::KinesisAnalyticsV2::Application
     Properties:
       ApplicationName: ${self:service}-app
       ApplicationDescription: Kinesis Analytics Application Test
@@ -39,6 +38,20 @@ Resources:
               MappingParameters:
                 JSONMappingParameters:
                   RecordRowPath: $
+  BasicApplicationOutputs:
+    Type: AWS::KinesisAnalytics::ApplicationOutput
+    DependsOn: 
+      - KinesisAnalyticsApplication
+      - AnalyticsConsumerLambdaFunction
+    Properties:
+      ApplicationName: !Ref KinesisAnalyticsApplication
+      Output:
+        Name: "exampleOutput"
+        DestinationSchema:
+          RecordFormatType: "JSON"
+        LambdaOutput:
+          ResourceARN: !GetAtt AnalyticsConsumerLambdaFunction.Arn
+          RoleARN: !GetAtt KinesisAnalyticsServiceExecutionRole.Arn
   #     RuntimeEnvironment: SQL-1_0
   #     ServiceExecutionRole:
   #       !GetAtt  KinesisAnalyticsServiceExecutionRole.Arn
@@ -79,21 +92,26 @@ Resources:
   #                   RecordRowPath: $
 
   KinesisAnalyticsServiceExecutionRole:
-    Type: 'AWS::IAM::Role'
+    Type: "AWS::IAM::Role"
     Properties:
       AssumeRolePolicyDocument:
-        Version: '2012-10-17'
+        Version: "2012-10-17"
         Statement:
           - Effect: Allow
             Principal:
               Service: kinesisanalytics.amazonaws.com
-            Action: 'sts:AssumeRole'
+            Action: "sts:AssumeRole"
       Path: /
       Policies:
-        - PolicyName: Open
+        - PolicyName: AnalyticsPermissions
           PolicyDocument:
-            Version: '2012-10-17'
+            Version: "2012-10-17"
             Statement:
               - Effect: Allow
-                Action: '*'
-                Resource: '*'
+                Action:
+                  - "firehose:DescribeDeliveryStream"
+                  - "firehose:Get*"
+                Resource: !GetAtt FirehoseStream.Arn
+              - Effect: Allow
+                Action: "lambda:*"
+                Resource: !GetAtt AnalyticsConsumerLambdaFunction.Arn
