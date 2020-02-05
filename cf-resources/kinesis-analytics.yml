@@ -21,7 +21,7 @@ Resources:
             INSERT INTO "FIREHOSE_STREAM_OUT"
                 SELECT STREAM "event_user", "event_timestamp", "event_type", "event_screenx", "event_screeny", "event_toElement"
                 FROM FIREHOSE_STREAM_001
-              WHERE CAST("event_screenx" AS int) < 400 AND CAST("event_screeny" AS int) < 400
+              WHERE (CAST("event_screenx" AS int) < 400) AND (CAST("event_screeny" AS int) < 400)
       
       Inputs:
         - NamePrefix: FIREHOSE_STREAM
