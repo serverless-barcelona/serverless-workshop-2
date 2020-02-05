@@ -1,11 +1,13 @@
 'use strict';
 const axios = require('axios');
 
-const send = async (data) => {
+const send = async (text) => {
     const response = await axios({
         method : 'post',
         url: process.env.WEBHOOK,
-        data: data,
+        data: {
+            text: text
+        },
         headers: {
             'Content-Type': 'application/json'
         }
@@ -23,7 +25,8 @@ module.exports.consume = async event => {
         /* Data is base64 encoded, so decode here */
         const str = Buffer.from(record.data, 'base64').toString();
         console.log(str);
-        await send(str);
+        const res = await send(str);
+        console.log(JSON.stringify(res));
         try {
             /*
 
