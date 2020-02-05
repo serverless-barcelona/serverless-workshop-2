@@ -20,7 +20,12 @@ Resources:
         Description: Table to hold clicks from users
         TableType: EXTERNAL_TABLE
         Parameters:
-          classification: csv
+          CrawlerSchemaDeserializerVersion: '1.0'
+          CrawlerSchemaSerializerVersion: '1.0'
+          classification: json
+          compressionType: gzip
+          typeOfData: file
+          EXTERNAL: 'TRUE'
         PartitionKeys: 
           - Name: year
             Type: bigint
@@ -32,24 +37,31 @@ Resources:
             Type: bigint
         # Retention: Integer
         StorageDescriptor: 
-          InputFormat: org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat
-          OutputFormat: org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat
+          InputFormat: org.apache.hadoop.mapred.TextInputFormat
+          OutputFormat: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
           Location: s3://${self:custom.streamBucket}/workshop
+          Compressed: false
           Columns:
-            - Name: usr
-              Type: VARCHAR(128)
-            - Name: ts
-              Type: INT
-            - Name: type
-              Type: VARCHAR(128)
-            - Name: x
-              Type: TINYINT
-            - Name: y
-              Type: TINYINT
-            - Name: toElement
-              Type: VARCHAR(128)
-          Compressed: True
+          - Name: user
+            Type: string
+            Comment: from deserializer
+          - Name: timestamp
+            Type: bigint
+            Comment: from deserializer
+          - Name: type
+            Type: string
+            Comment: from deserializer
+          - Name: x
+            Type: int
+            Comment: from deserializer
+          - Name: y
+            Type: int
+            Comment: from deserializer
+          - Name: toelement
+            Type: string
+            Comment: from deserializer
           SerdeInfo:
+            SerializationLibrary: org.openx.data.jsonserde.JsonSerDe
             Parameters:
-              "serialization.format": "1"
-            SerializationLibrary: org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe
+              paths: day,hour,month,timestamp,toElement,type,user,x,y,year
+              serialization.format: '1'
