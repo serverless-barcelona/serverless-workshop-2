@@ -55,7 +55,7 @@ Resources:
       - FirehoseRole
       - StreamBucket
     Properties:
-      DeliveryStreamName: serverless-workshop
+      DeliveryStreamName: ${self:custom.commonName}
       S3DestinationConfiguration:
         BufferingHints:
           IntervalInSeconds: 60

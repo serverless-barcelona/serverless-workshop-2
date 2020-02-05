@@ -4,7 +4,7 @@ Resources:
     Properties: 
       CatalogId: !Ref AWS::AccountId
       DatabaseInput: 
-        Name: website_db	
+        Name: ${self:custom.commonName}_db	
         Description: Database to hold tables for flights data
         LocationUri: s3://${self:custom.streamBucket}/workshop
 
@@ -16,7 +16,7 @@ Resources:
       CatalogId: !Ref AWS::AccountId
       DatabaseName: !Ref AthenaDatabase
       TableInput: 
-        Name: website_clicks_tb
+        Name: ${self:custom.commonName}
         Description: Table to hold clicks from users
         TableType: EXTERNAL_TABLE
         Parameters:

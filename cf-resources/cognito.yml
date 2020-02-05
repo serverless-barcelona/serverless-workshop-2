@@ -24,7 +24,7 @@ Resources:
     CognitoAuthorizer:
         Type: AWS::ApiGateway::Authorizer
         Properties:
-            Name: CognitoAuthorizer
+            Name: ${self:custom.commonName}Authorizer
             RestApiId:
                 Ref: ApiGatewayRestApi
             Type: COGNITO_USER_POOLS
@@ -36,7 +36,7 @@ Resources:
     CognitoIdentityPool:
         Type: AWS::Cognito::IdentityPool
         Properties:
-            IdentityPoolName: cognito_user_identity_pool
+            IdentityPoolName: ${self:custom.commonName}
             AllowUnauthenticatedIdentities: false
             CognitoIdentityProviders: 
             - ClientId: !Ref CognitoUserPoolClient
@@ -53,7 +53,7 @@ Resources:
         Type: AWS::IAM::Role
         Properties:
             Path: /
-            RoleName: cognito_role_firehose
+            RoleName: ${self:custom.commonName}
             AssumeRolePolicyDocument:
                 Version: '2012-10-17'
                 Statement:

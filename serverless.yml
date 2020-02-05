@@ -1,4 +1,4 @@
-service: serverless-barcelona-workshop-2a
+service: sls-bcn-workshop-2-latest
 
 frameworkVersion: ">=1.2.0 <2.0.0"
 
@@ -6,6 +6,7 @@ custom:
   s3Bucket: ${self:service}
   accountId: ${file(./accountHelper.js):getAccountId}
   streamBucket: ${self:service}-${self:custom.accountId}
+  commonName: ${self:service}_${self:custom.accountId}
 
 provider:
   name: aws
