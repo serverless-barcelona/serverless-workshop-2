@@ -12,6 +12,6 @@
     "axios": "0.19.2"
   },
   "devDependencies": {
-    "serverless": "^1.62.0"
+    "serverless": "^3.25.1"
   }
 }
